@@ -2,11 +2,15 @@ import React,{Component} from 'react';
 import './App.css';
 import Card from './Card';
 import Navbar from './Navbar';
+import Timer from './Timer';
+
 const CardState = {
 			HIDING:0,
 			SHOWING:1,
 			MATCHING:2
 		};
+
+
 
 class App extends Component {
 	constructor(props){
@@ -30,11 +34,17 @@ class App extends Component {
 			{id:14,cardState: CardState.HIDING,backgroundColor:'lightskyblue'},
 			{id:15,cardState: CardState.HIDING,backgroundColor:'lightskyblue'},
 		];
-		this.state = {cards:this.shuffle(cards)};
+		this.state = {
+			cards:this.shuffle(cards),
+			gameStart:false,
+			correctPairs:0
+			
+		};
 		this.shuffle=this.shuffle.bind(this);
 		this.reset=this.reset.bind(this);
 		this.showColor=this.showColor.bind(this);
 		this.updateGame=this.updateGame.bind(this);
+		this.startGame=this.startGame.bind(this);
 	}
 	shuffle(a) {
 		for (let i = a.length - 1; i > 0; i--) {
@@ -49,19 +59,28 @@ class App extends Component {
 			return card
 			
 		})
-		this.setState({cards:this.shuffle(cardsReset)});
+		this.setState({
+			cards:this.shuffle(cardsReset),
+			correctPairs:0,
+			gameStart:false
+		});
 	}
 	showColor(id){
-		const updated = this.state.cards.map((card)=>{
-			if (card.id===id && card.cardState !== 2){
-				card.cardState=CardState.SHOWING;
-				
-			}
-			return card;
-		})
-		this.setState({cards:updated},()=>{
-			this.updateGame(updated);
-		})
+		if (this.state.gameStart===true){
+			const updated = this.state.cards.map((card)=>{
+				if (card.id===id && card.cardState !== 2){
+					card.cardState=CardState.SHOWING;
+
+				}
+				return card;
+			})
+			this.setState({cards:updated},()=>{
+				this.updateGame(updated);
+			})
+		}else{
+			return;
+		}
+		
 	}
 	updateGame(updated){
 		const clicked = updated.filter(card => card.cardState===1);
@@ -73,9 +92,17 @@ class App extends Component {
 					}
 					return card;
 				})
-				setTimeout(()=>{
-					this.setState({cards:updateWithMatch})
-				},500);
+				if (this.state.correctPairs === 7){
+					setTimeout(()=>{
+						this.setState({cards:updateWithMatch, correctPairs: this.state.correctPairs + 1, gameStart:false})
+					},1000);
+				}else{
+					setTimeout(()=>{
+						this.setState({cards:updateWithMatch, correctPairs: this.state.correctPairs + 1})
+					},1000);
+				}
+				
+			
 				
 			}else {
 				const updateWithNoMatch = updated.map(card=>{
@@ -86,11 +113,14 @@ class App extends Component {
 				})
 				setTimeout(()=>{
 					this.setState({cards:updateWithNoMatch});
-				},500);
+				},1000);
 				
 			}
 		}
 
+	}
+	startGame(s){
+		this.setState({gameStart:s});
 	}
 	
 	
@@ -100,10 +130,11 @@ class App extends Component {
 		));
 		return (
 			<div className="App">
-				<Navbar restartGame={this.reset}/>
+				<Navbar/>
 				<div class="cardSquares">
 					{cards}
 				</div>
+				<Timer {...this.state} startGame={this.startGame} resetGame={this.reset}/>
 				
 			</div>
   		);

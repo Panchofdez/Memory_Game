@@ -17,7 +17,7 @@ class Card extends Component {
 			width:'160px',
 			display:'inline-block',
 			margin:'10px',
-			borderRadius:'10px'
+			borderRadius:'20px'
 		}
 		
 		return(
