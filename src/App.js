@@ -53,7 +53,7 @@ class App extends Component {
 	}
 	showColor(id){
 		const updated = this.state.cards.map((card)=>{
-			if (card.id===id){
+			if (card.id===id && card.cardState !== 2){
 				card.cardState=CardState.SHOWING;
 				
 			}
@@ -75,7 +75,7 @@ class App extends Component {
 				})
 				setTimeout(()=>{
 					this.setState({cards:updateWithMatch})
-				},1000);
+				},500);
 				
 			}else {
 				const updateWithNoMatch = updated.map(card=>{
@@ -86,7 +86,7 @@ class App extends Component {
 				})
 				setTimeout(()=>{
 					this.setState({cards:updateWithNoMatch});
-				},1000);
+				},500);
 				
 			}
 		}
@@ -101,7 +101,10 @@ class App extends Component {
 		return (
 			<div className="App">
 				<Navbar restartGame={this.reset}/>
-				{cards}
+				<div class="cardSquares">
+					{cards}
+				</div>
+				
 			</div>
   		);
 	}

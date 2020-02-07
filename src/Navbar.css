@@ -5,3 +5,13 @@ nav {
 	background-color:navy;
 	color:white;
 }
+
+h2,button {
+	margin: 10px;
+}
+
+button {
+	border-radius:5px;
+	height:40px;
+	width:100px;
+}

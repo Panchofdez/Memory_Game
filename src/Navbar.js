@@ -7,7 +7,7 @@ class Navbar extends Component {
 		return(
 			<nav>
 				<h2>Memory Game</h2>
-				<button onClick={()=>restartGame()}>New Game</button>
+				<button onClick={()=>restartGame()}>NEW GAME</button>
 			</nav>
 		)
 	}
